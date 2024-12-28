@@ -18,11 +18,11 @@ public class Movie {
     public Set<Genre> genres;
 
     @ManyToMany(mappedBy = "history")
-    @JsonBackReference
+    @JsonBackReference("user-history")
     private Set<User> watchedBy;
 
     @ManyToMany(mappedBy = "moviesToBeWatched")
-    @JsonBackReference
+    @JsonBackReference("user-to-be-watched")
     private Set<User> toBeWatchedBy;
 
     public Movie(String title, Set<Genre> genres) {
