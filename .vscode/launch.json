@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-Team7Application<team7>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "be.ucll.mobileapplications.team7.Team7Application",
+      "projectName": "team7",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}
