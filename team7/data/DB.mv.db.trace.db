@@ -1,0 +1,12 @@
+2024-12-16 20:48:00.492250+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Erreur lors de la conversion de données "ARRAY ['DRAMA', 'ROMANCE'] (MOVIES: ""GENRES"" TINYINT ARRAY)"
+Data conversion error converting "ARRAY ['DRAMA', 'ROMANCE'] (MOVIES: ""GENRES"" TINYINT ARRAY)"; SQL statement:
+insert into movies (genres,title) values (?,?) [22018-232]
+2024-12-16 20:55:34.483740+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Erreur lors de la conversion de données "ARRAY ['DRAMA', 'ROMANCE'] (MOVIES: ""GENRES"" TINYINT ARRAY)"
+Data conversion error converting "ARRAY ['DRAMA', 'ROMANCE'] (MOVIES: ""GENRES"" TINYINT ARRAY)"; SQL statement:
+insert into movies (genres,title) values (?,?) [22018-232]
+2024-12-16 20:56:26.488530+01:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Erreur lors de la conversion de données "ARRAY ['DRAMA', 'ROMANCE'] (MOVIES: ""GENRES"" TINYINT ARRAY)"
+Data conversion error converting "ARRAY ['DRAMA', 'ROMANCE'] (MOVIES: ""GENRES"" TINYINT ARRAY)"; SQL statement:
+insert into movies (genres,title) values (?,?) [22018-232]
