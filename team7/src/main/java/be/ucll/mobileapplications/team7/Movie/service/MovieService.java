@@ -8,25 +8,25 @@ import be.ucll.mobileapplications.team7.Movie.model.Movie;
 @Service
 public class MovieService {
 
-    @Autowired
-    private MovieRepository movieRepository;
+  @Autowired
+  private MovieRepository movieRepository;
 
-    public MovieService() {
-    }
-
-    public List<Movie> getAllMovies() {
-      return movieRepository.findAll();
+  public MovieService() {
   }
 
-    public Movie addMovie(Movie movie) throws MovieServiceException {
-      System.out.println("Adding movie with title: " + movie.getTitle());
-      String title = movie.getTitle();
-      Movie existingMovie = movieRepository.findMovieByTitle(title);
+  public List<Movie> getAllMovies() {
+    return movieRepository.findAll();
+  }
 
-      if (existingMovie != null) {
-          throw new MovieServiceException("title", "User with given email already exists");
-      }
-      movieRepository.save(movie);
-      return movie;
+  public Movie addMovie(Movie movie) throws MovieServiceException {
+    System.out.println("Adding movie with title: " + movie.getTitle());
+    String title = movie.getTitle();
+    Movie existingMovie = movieRepository.findMovieByTitle(title);
+
+    if (existingMovie != null) {
+      throw new MovieServiceException("title", "User with given email already exists");
+    }
+    movieRepository.save(movie);
+    return movie;
   }
 }

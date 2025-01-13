@@ -2,12 +2,14 @@ package be.ucll.mobileapplications.team7.Party.model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import be.ucll.mobileapplications.team7.Movie.model.Movie;
+// import be.ucll.mobileapplications.team7.Movie.model.Movie;
 import be.ucll.mobileapplications.team7.User.model.User;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -31,11 +33,12 @@ public class Party {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "party_creator_id")
+    @JoinColumn(name = "user_email")
     @JsonBackReference
     private User partyCreator;
 
-    private List<String> partyMembers;
+    @ManyToMany(mappedBy = "joinedParties")
+    private Set<User> partyMembers;
 
     private List<String> suggestedMovies;
 
@@ -47,7 +50,7 @@ public class Party {
 
     public Party(User partyCreator) {
         this.partyCreator = partyCreator;
-        this.partyMembers = new ArrayList<>();
+        this.partyMembers = new HashSet<>();
         this.suggestedMovies = new ArrayList<>();
         this.selectedMovies = new ArrayList<>();
         this.creationDate = LocalDate.now();
@@ -73,11 +76,11 @@ public class Party {
         this.partyCreator = partyCreator;
     }
 
-    public List<String> getPartyMembers() {
+    public Set<User> getPartyMembers() {
         return partyMembers;
     }
 
-    public void setPartyMembers(List<String> partyMembers) {
+    public void setPartyMembers(Set<User> partyMembers) {
         this.partyMembers = partyMembers;
     }
 
@@ -111,5 +114,14 @@ public class Party {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Set<User> addPartyMember(User partyMember) {
+        this.partyMembers.add(partyMember);
+        return this.partyMembers;
+    }
+
+    public Status setStatusStarted() {
+        return this.status = Status.STARTED;
     }
 }

@@ -8,9 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import be.ucll.mobileapplications.team7.Movie.model.Genre;
 import be.ucll.mobileapplications.team7.Movie.model.Movie;
 import be.ucll.mobileapplications.team7.Party.model.Party;
@@ -21,12 +19,14 @@ import jakarta.persistence.*;
 @Table(name = "users")
 public class User {
 
-  @NotBlank(message = "First name is required")
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  public long id;
+
+  @NotBlank(message = "Username name is required")
   public String username;
 
-  @Id
-  @Email
-  @NotBlank(message = "Email is required")
+  @Email(message = "Enter a valid email")
   public String email;
 
   @NotBlank(message = "Password is required")
@@ -50,6 +50,10 @@ public class User {
   @JsonManagedReference
   private List<Party> parties;
 
+  @ManyToMany
+  @JoinTable(name = "user_party", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "party_id"))
+  private Set<Party> joinedParties;
+
   public User(String username, String email, String password, LocalDate dateOfBirth) throws UserServiceException {
     this.username = username;
 
@@ -64,8 +68,6 @@ public class User {
     this.history = new HashSet<Movie>();
 
     this.moviesToBeWatched = new HashSet<Movie>();
-
-    // this.party = null;
 
     this.favoriteGenres = new HashSet<Genre>();
   }

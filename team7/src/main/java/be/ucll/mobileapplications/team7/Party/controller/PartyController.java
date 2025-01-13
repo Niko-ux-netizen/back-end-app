@@ -5,13 +5,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import be.ucll.mobileapplications.team7.Party.model.Party;
 import be.ucll.mobileapplications.team7.Party.service.PartyService;
+import be.ucll.mobileapplications.team7.User.service.UserServiceException;
 import jakarta.validation.Valid;
 
 @CrossOrigin(origins = "*")
@@ -27,9 +30,19 @@ public class PartyController {
         return partyService.getAllParties();
     }
 
-    @PostMapping()
-    public Party addParty(@RequestBody @Valid Party party) {
-        return partyService.addParty(party);
+    @PostMapping("/{id}")
+    public Party addParty(@PathVariable int id) throws UserServiceException {
+        return partyService.addParty(id);
+    }
+
+    @PostMapping("/{partyId}/{userId}")
+    public Party joinParty(@PathVariable int partyId, @PathVariable int userId) throws Exception {
+        return partyService.joinParty(partyId, userId);
+    }
+
+    @PutMapping("/start/{partyId}")
+    public Party startParty(@PathVariable int partyId) throws Exception {
+        return partyService.startParty(partyId);
     }
 
 }
