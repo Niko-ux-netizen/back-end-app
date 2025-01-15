@@ -1,18 +1,14 @@
 package be.ucll.mobileapplications.team7.Review.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import be.ucll.mobileapplications.team7.Movie.model.Genre;
 import be.ucll.mobileapplications.team7.Movie.model.Movie;
 import be.ucll.mobileapplications.team7.Movie.service.MovieRepository;
 import be.ucll.mobileapplications.team7.Review.model.Review;
 import be.ucll.mobileapplications.team7.User.model.User;
 import be.ucll.mobileapplications.team7.User.service.UserRepository;
-import be.ucll.mobileapplications.team7.User.service.UserServiceException;
 
 @Service
 public class ReviewService {

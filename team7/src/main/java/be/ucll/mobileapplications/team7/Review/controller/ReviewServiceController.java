@@ -3,7 +3,6 @@ package be.ucll.mobileapplications.team7.Review.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -12,25 +11,16 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import be.ucll.mobileapplications.team7.Movie.model.Genre;
-import be.ucll.mobileapplications.team7.Movie.model.Movie;
-import be.ucll.mobileapplications.team7.Movie.service.MovieService;
-import be.ucll.mobileapplications.team7.Movie.service.MovieServiceException;
 import be.ucll.mobileapplications.team7.Review.model.Review;
 import be.ucll.mobileapplications.team7.Review.service.ReviewService;
 import be.ucll.mobileapplications.team7.Review.service.ReviewServiceException;
 import be.ucll.mobileapplications.team7.ServiceException.ServiceException;
-import be.ucll.mobileapplications.team7.User.model.User;
-import be.ucll.mobileapplications.team7.User.service.UserService;
-import be.ucll.mobileapplications.team7.User.service.UserServiceException;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PutMapping;
 
 @CrossOrigin(origins = "*")
 @RestController

@@ -1,24 +1,11 @@
 package be.ucll.mobileapplications.team7.Review.model;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import org.h2.engine.Comment;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import be.ucll.mobileapplications.team7.Movie.model.Genre;
 import be.ucll.mobileapplications.team7.Movie.model.Movie;
-import be.ucll.mobileapplications.team7.Party.model.Party;
 import be.ucll.mobileapplications.team7.User.model.User;
-import be.ucll.mobileapplications.team7.User.service.UserServiceException;
 import jakarta.persistence.*;
 
 @Entity
