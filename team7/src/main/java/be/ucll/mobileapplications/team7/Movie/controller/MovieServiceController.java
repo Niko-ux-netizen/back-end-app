@@ -37,6 +37,7 @@ public class MovieServiceController {
         return movieService.getAllMovies();
     }
 
+    
     @GetMapping("/swipe/user")
     public List<Movie> getMoviesByGenresOfTheUserForSwipe(@RequestParam String email, @RequestParam Boolean allMode) throws UserServiceException {
         return movieService.getMoviesByGenresOfTheUserForSwipe(email, allMode);
