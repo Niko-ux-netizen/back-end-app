@@ -38,8 +38,8 @@ public class MovieServiceController {
     }
 
     @GetMapping("/swipe/user")
-    public List<Movie> getMoviesByGenresOfTheUserForSwipe(@RequestParam String email) throws UserServiceException {
-        return movieService.getMoviesByGenresOfTheUserForSwipe(email);
+    public List<Movie> getMoviesByGenresOfTheUserForSwipe(@RequestParam String email, @RequestParam Boolean allMode) throws UserServiceException {
+        return movieService.getMoviesByGenresOfTheUserForSwipe(email, allMode);
     }
 
     @GetMapping("/genres/all")
