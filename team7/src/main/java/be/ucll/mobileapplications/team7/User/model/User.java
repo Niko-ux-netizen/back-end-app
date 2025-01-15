@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import be.ucll.mobileapplications.team7.Movie.model.Genre;
 import be.ucll.mobileapplications.team7.Movie.model.Movie;
 import be.ucll.mobileapplications.team7.Party.model.Party;
+import be.ucll.mobileapplications.team7.Review.model.Review;
 import be.ucll.mobileapplications.team7.User.service.UserServiceException;
 import jakarta.persistence.*;
 
@@ -44,11 +46,19 @@ public class User {
   @JoinTable(name = "to_be_watched_movies", joinColumns = @JoinColumn(name = "user_email"), inverseJoinColumns = @JoinColumn(name = "movie_title"))
   private Set<Movie> moviesToBeWatched = new HashSet<>();
 
+  @ManyToMany(fetch = FetchType.EAGER)
+  @JoinTable(name = "denied_movies", joinColumns = @JoinColumn(name = "user_email"), inverseJoinColumns = @JoinColumn(name = "movie_title"))
+  private Set<Movie> deniedMovies;
+
   public Set<Genre> favoriteGenres = new HashSet<>();
 
   @OneToMany(mappedBy = "partyCreator")
   @JsonManagedReference
   private Set<Party> parties = new HashSet<>();
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonManagedReference("user-reviews")
+  private List<Review> reviews;
 
   @ManyToMany
   @JoinTable(name = "user_party", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "party_id"))
@@ -64,12 +74,27 @@ public class User {
     this.dateOfBirth = dateOfBirth;
     this.history = new HashSet<Movie>();
     this.moviesToBeWatched = new HashSet<Movie>();
+
+    this.deniedMovies = new HashSet<Movie>();
+
     this.favoriteGenres = new HashSet<Genre>();
+
+    this.reviews = new ArrayList<Review>();
     this.parties = new HashSet<Party>();
     this.joinedParties = new HashSet<Party>();
   }
 
   public User() {
+  }
+
+  public void addMovieToDeniedMovies(Movie movie) {
+    this.getDeniedMovies().add(movie);
+
+    movie.addDeniedByUser(this);
+  }
+
+  public Set<Movie> getDeniedMovies() {
+    return this.deniedMovies;
   }
 
   public void addMovieToHistoryListUser(Movie movie) {
@@ -130,5 +155,46 @@ public class User {
 
   public void setDateOfBirth(LocalDate dateOfBirth) {
     this.dateOfBirth = dateOfBirth;
+  }
+
+  public long getId() {
+    return this.id;
+  }
+
+  public void setId(long id) {
+    this.id = id;
+  }
+  public void setHistory(Set<Movie> history) {
+    this.history = history;
+  }
+  public void setMoviesToBeWatched(Set<Movie> moviesToBeWatched) {
+    this.moviesToBeWatched = moviesToBeWatched;
+  }
+  public void setDeniedMovies(Set<Movie> deniedMovies) {
+    this.deniedMovies = deniedMovies;
+  }
+
+  public Set<Party> getParties() {
+    return this.parties;
+  }
+
+  public void setParties(Set<Party> parties) {
+    this.parties = parties;
+  }
+
+  public List<Review> getReviews() {
+    return this.reviews;
+  }
+
+  public void setReviews(List<Review> reviews) {
+    this.reviews = reviews;
+  }
+
+  public Set<Party> getJoinedParties() {
+    return this.joinedParties;
+  }
+
+  public void setJoinedParties(Set<Party> joinedParties) {
+    this.joinedParties = joinedParties;
   }
 }
