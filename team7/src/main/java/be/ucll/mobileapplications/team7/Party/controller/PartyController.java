@@ -45,4 +45,13 @@ public class PartyController {
         return partyService.startParty(partyId);
     }
 
+    @PostMapping("suggestedMovie/{partyId}/{movieId}")
+    public Party addSugestedMovie(@PathVariable int partyId, @PathVariable int movieId) throws Exception {
+        return partyService.addSugestedMovie(partyId, movieId);
+    }
+
+    @PostMapping("selectedMovie/{partyId}/{movieId}")
+    public Party addSelectedMovie(@PathVariable int partyId, @PathVariable int movieId) throws Exception {
+        return partyService.addSelectedMovie(partyId, movieId);
+    }
 }

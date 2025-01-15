@@ -11,22 +11,18 @@ public class MovieService {
   @Autowired
   private MovieRepository movieRepository;
 
-  public MovieService() {
-  }
-
   public List<Movie> getAllMovies() {
     return movieRepository.findAll();
   }
 
   public Movie addMovie(Movie movie) throws MovieServiceException {
-    System.out.println("Adding movie with title: " + movie.getTitle());
     String title = movie.getTitle();
     Movie existingMovie = movieRepository.findMovieByTitle(title);
 
     if (existingMovie != null) {
-      throw new MovieServiceException("title", "User with given email already exists");
+      throw new MovieServiceException(title, "Movie with given title already exists");
     }
-    movieRepository.save(movie);
-    return movie;
+
+    return movieRepository.save(movie);
   }
 }
