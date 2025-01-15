@@ -98,6 +98,48 @@ public class UserService {
     return user;
   }
 
+  public User removeMovieFromDeniedListUser(String email, String title) throws UserServiceException {
+
+    User user = userRepository.findUserByEmail(email);
+    Movie movie = movieRepository.findMovieByTitle(title);
+
+    if (user == null) {
+      throw new UserServiceException("userEmail", "User with email %s does not exist".formatted(email));
+    }
+
+    if (movie == null) {
+      throw new UserServiceException("title", "This movie is not in the database");
+    }
+
+    if (!user.getDeniedMovies().contains(movie)) {
+      throw new UserServiceException("movie", "User doesn't has this movie in his to be watched list.");
+    }
+
+    user.getDeniedMovies().remove(movie);
+
+    movie.getDeniedBy().remove(user);
+
+    userRepository.save(user);
+    return user;
+  }
+
+  public User resetDeniedList(String email) throws UserServiceException {
+
+    User user = userRepository.findUserByEmail(email);
+
+    if (user == null) {
+      throw new UserServiceException("userEmail", "User with email %s does not exist".formatted(email));
+    }
+
+    for (Movie movie : user.getDeniedMovies()) {
+      movie.getDeniedBy().remove(user);
+    }
+
+    user.getDeniedMovies().clear();
+    userRepository.save(user);
+    return user;
+  }
+  
   public User addMovieToHistoryListUser(String email, String title) throws UserServiceException {
     User user = userRepository.findUserByEmail(email);
     Movie movie = movieRepository.findMovieByTitle(title);
@@ -110,12 +152,16 @@ public class UserService {
       throw new UserServiceException("title", "This movie is not in the database");
     }
 
+    if (user.getHistory().contains(movie)) {
+      throw new UserServiceException("movie", "User already has this movie in his history list.");
+    }
+
     if (user.getMoviesToBeWatched().contains(movie)) {
       removeMovieFromToBeWatchedList(email, title);
     }
 
-    if (user.getHistory().contains(movie)) {
-      throw new UserServiceException("movie", "User already has this movie in his history list.");
+    if (user.getDeniedMovies().contains(movie)) {
+      removeMovieFromDeniedListUser(email, title);
     }
 
     user.addMovieToHistoryListUser(movie);
@@ -136,16 +182,16 @@ public class UserService {
       throw new UserServiceException("title", "This movie is not in the database");
     }
 
-    if (user.getHistory().contains(movie)) {
-      removeMovieFromHistory(email, title);
-    }
-
     if (user.getMoviesToBeWatched().contains(movie)) {
       throw new UserServiceException("movie", "User already has this item in his to be watched list.");
     }
 
     if (user.getHistory().contains(movie)) {
-      throw new UserServiceException("movie", "User already has this item in his to be watched list.");
+      removeMovieFromHistory(email, title);
+    }
+
+    if (user.getDeniedMovies().contains(movie)) {
+      removeMovieFromDeniedListUser(email, title);
     }
 
     user.addMovieToBeWatched(movie);
@@ -153,4 +199,35 @@ public class UserService {
     movieRepository.save(movie);
     return userRepository.save(user);
   }
+  
+  public User addMovieToDeniedListUser(String email, String title) throws UserServiceException {
+    User user = userRepository.findUserByEmail(email);
+    Movie movie = movieRepository.findMovieByTitle(title);
+
+    if (user == null) {
+      throw new UserServiceException("userEmail", "User with email %s does not exist".formatted(email));
+    }
+
+    if (movie == null) {
+      throw new UserServiceException("title", "This movie is not in the database");
+    }
+
+    if (user.getDeniedMovies().contains(movie)) {
+      throw new UserServiceException("movie", "User already has this item in his denied list.");
+    }
+
+    if (user.getMoviesToBeWatched().contains(movie)) {
+      removeMovieFromToBeWatchedList(email, title);
+    }
+
+    if (user.getHistory().contains(movie)) {
+      removeMovieFromHistory(email, title);
+    }
+
+    user.addMovieToDeniedMovies(movie);
+
+    movieRepository.save(movie);
+    return userRepository.save(user);
+  }
+
 }

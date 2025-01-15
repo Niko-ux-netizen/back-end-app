@@ -50,7 +50,6 @@ public class Party {
 
     public Party(User partyCreator) {
         this.partyCreator = partyCreator;
-        this.partyMembers = new HashSet<>();
         this.suggestedMovies = new ArrayList<>();
         this.selectedMovies = new ArrayList<>();
         this.creationDate = LocalDate.now();

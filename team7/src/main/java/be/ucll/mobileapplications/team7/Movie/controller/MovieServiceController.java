@@ -3,6 +3,7 @@ package be.ucll.mobileapplications.team7.Movie.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import be.ucll.mobileapplications.team7.Movie.model.Genre;
 import be.ucll.mobileapplications.team7.Movie.model.Movie;
 import be.ucll.mobileapplications.team7.Movie.service.MovieService;
 import be.ucll.mobileapplications.team7.Movie.service.MovieServiceException;
@@ -38,6 +40,21 @@ public class MovieServiceController {
     @GetMapping()
     public List<Movie> getAllMovies() {
         return movieService.getAllMovies();
+    }
+
+    @GetMapping("/swipe/user")
+    public List<Movie> getMoviesByGenresOfTheUserForSwipe(@RequestParam String email) throws UserServiceException {
+        return movieService.getMoviesByGenresOfTheUserForSwipe(email);
+    }
+
+    @GetMapping("/genres/all")
+    public List<Movie> getMoviesByAllGenres(@RequestBody Set<Genre> genres) throws UserServiceException {
+        return movieService.getMoviesByAllGenres(genres);
+    }
+
+    @GetMapping("/genres/some")
+    public List<Movie> getMoviesBySomeGenres(@RequestBody Set<Genre> genres) throws UserServiceException {
+        return movieService.getMoviesBySomeGenres(genres);
     }
 
     @PostMapping()

@@ -1,4 +1,4 @@
-package be.ucll.mobileapplications.team7.User.controller;
+package be.ucll.mobileapplications.team7.Review.controller;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,69 +13,46 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import be.ucll.mobileapplications.team7.Movie.model.Genre;
+import be.ucll.mobileapplications.team7.Movie.model.Movie;
+import be.ucll.mobileapplications.team7.Movie.service.MovieService;
+import be.ucll.mobileapplications.team7.Movie.service.MovieServiceException;
+import be.ucll.mobileapplications.team7.Review.model.Review;
+import be.ucll.mobileapplications.team7.Review.service.ReviewService;
+import be.ucll.mobileapplications.team7.Review.service.ReviewServiceException;
 import be.ucll.mobileapplications.team7.ServiceException.ServiceException;
 import be.ucll.mobileapplications.team7.User.model.User;
 import be.ucll.mobileapplications.team7.User.service.UserService;
 import be.ucll.mobileapplications.team7.User.service.UserServiceException;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api/user")
-public class UserServiceController {
-  
+@RequestMapping("/api/review")
+public class ReviewServiceController {
+
     @Autowired
-    private UserService userService;
+    private ReviewService reviewService;
+  
+    @PostMapping()
+    public Review addReview(@RequestBody @Valid Review review, @RequestParam String email, @RequestParam String title) throws ReviewServiceException {
+        return reviewService.addReview(review, email, title);
+    }
+
+    @DeleteMapping()
+    public Review addReview(@RequestParam Long reviewId) throws ReviewServiceException {
+        return reviewService.deleteReview(reviewId);
+    }
 
     @GetMapping()
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
-    }
-
-    @PostMapping()
-    public User addUser(@RequestBody @Valid User user) throws UserServiceException {
-        return userService.addUser(user);
-    }
-
-    @PostMapping("/history")
-    public User addMovieToHistory(@RequestParam String email, @RequestParam String title) throws UserServiceException {
-        return userService.addMovieToHistoryListUser(email, title);
-    }
-
-    @DeleteMapping("/history/remove")
-    public User removeMovieFromHistory(@RequestParam String email, @RequestParam String title) throws UserServiceException {
-        return userService.removeMovieFromHistory(email, title);
-    }
-
-    @PostMapping("/tobewatched")
-    public User addMovieToBeWatched(@RequestParam String email, @RequestParam String title) throws UserServiceException {
-        return userService.addMovieToBeWatchedListUser(email, title);
-    }
-
-    @DeleteMapping("/tobewatched/remove")
-    public User removeMovieToBeWatched(@RequestParam String email, @RequestParam String title) throws UserServiceException {
-        return userService.removeMovieFromToBeWatchedList(email, title);
-    }
-
-    @PostMapping("/denied")
-    public User addMovieToDenied(@RequestParam String email, @RequestParam String title) throws UserServiceException {
-        return userService.addMovieToDeniedListUser(email, title);
-    }
-
-    @PutMapping("/denied/reset")
-    public User removeMovieDenied(@RequestParam String email) throws UserServiceException {
-        return userService.resetDeniedList(email);
-    }
-    
-    @PostMapping("/genres")
-    public User addGenresToUser(@RequestParam String email, @RequestBody Set<Genre> genres) throws UserServiceException {
-        return userService.addGenresToUser(email, genres);
+    public List<Review> getAllReviews() {
+        return reviewService.getAllReviews();
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
