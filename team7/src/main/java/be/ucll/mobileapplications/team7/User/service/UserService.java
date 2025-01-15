@@ -31,8 +31,7 @@ public class UserService {
     if (existingUser != null) {
       throw new UserServiceException("email", "User with given email already exists");
     }
-    userRepository.save(user);
-    return user;
+    return userRepository.save(user);
   }
 
   public User addGenresToUser(String email, Set<Genre> genres) throws UserServiceException {

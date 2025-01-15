@@ -40,21 +40,21 @@ public class User {
 
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "history", joinColumns = @JoinColumn(name = "user_email"), inverseJoinColumns = @JoinColumn(name = "movie_title"))
-  private Set<Movie> history;
+  private Set<Movie> history = new HashSet<>();
 
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "to_be_watched_movies", joinColumns = @JoinColumn(name = "user_email"), inverseJoinColumns = @JoinColumn(name = "movie_title"))
-  private Set<Movie> moviesToBeWatched;
+  private Set<Movie> moviesToBeWatched = new HashSet<>();
 
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "denied_movies", joinColumns = @JoinColumn(name = "user_email"), inverseJoinColumns = @JoinColumn(name = "movie_title"))
   private Set<Movie> deniedMovies;
 
-  public Set<Genre> favoriteGenres;
+  public Set<Genre> favoriteGenres = new HashSet<>();
 
   @OneToMany(mappedBy = "partyCreator")
   @JsonManagedReference
-  private List<Party> parties;
+  private Set<Party> parties = new HashSet<>();
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonManagedReference("user-reviews")
@@ -62,21 +62,17 @@ public class User {
 
   @ManyToMany
   @JoinTable(name = "user_party", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "party_id"))
-  private Set<Party> joinedParties;
+  private Set<Party> joinedParties = new HashSet<>();
 
   public User(String username, String email, String password, LocalDate dateOfBirth) throws UserServiceException {
     this.username = username;
-
     this.email = email;
-
     this.password = password;
     if (password.strip().length() < 1) {
       throw new UserServiceException("password", "Password is required");
     }
     this.dateOfBirth = dateOfBirth;
-
     this.history = new HashSet<Movie>();
-
     this.moviesToBeWatched = new HashSet<Movie>();
 
     this.deniedMovies = new HashSet<Movie>();
@@ -84,6 +80,8 @@ public class User {
     this.favoriteGenres = new HashSet<Genre>();
 
     this.reviews = new ArrayList<Review>();
+    this.parties = new HashSet<Party>();
+    this.joinedParties = new HashSet<Party>();
   }
 
   public User() {
@@ -176,11 +174,11 @@ public class User {
     this.deniedMovies = deniedMovies;
   }
 
-  public List<Party> getParties() {
+  public Set<Party> getParties() {
     return this.parties;
   }
 
-  public void setParties(List<Party> parties) {
+  public void setParties(Set<Party> parties) {
     this.parties = parties;
   }
 

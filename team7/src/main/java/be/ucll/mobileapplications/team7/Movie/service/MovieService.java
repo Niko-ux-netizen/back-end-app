@@ -110,9 +110,9 @@ public class MovieService {
     Movie existingMovie = movieRepository.findMovieByTitle(title);
 
     if (existingMovie != null) {
-      throw new MovieServiceException("title", "User with given email already exists");
+      throw new MovieServiceException(title, "Movie with given title already exists");
     }
-    movieRepository.save(movie);
-    return movie;
+
+    return movieRepository.save(movie);
   }
 }
