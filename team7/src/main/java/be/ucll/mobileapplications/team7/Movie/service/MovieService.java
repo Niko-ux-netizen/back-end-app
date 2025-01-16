@@ -56,7 +56,7 @@ public class MovieService {
     return finalList;
   }
 
-  public List<Movie> getMoviesBySomeGenres(Set<Genre> genres) throws UserServiceException {
+  public List<Movie> getMoviesBySomeGenres(Set<Genre> genres) {
     
     List<Movie> movies = getAllMovies();
 
@@ -74,7 +74,7 @@ public class MovieService {
     return selectedMovies;
   }
 
-  public List<Movie> getMoviesByAllGenres(Set<Genre> genres) throws UserServiceException {
+  public List<Movie> getMoviesByAllGenres(Set<Genre> genres) {
     
     List<Movie> movies = getAllMovies();
 
