@@ -43,12 +43,12 @@ public class MovieServiceController {
         return movieService.getMoviesByGenresOfTheUserForSwipe(email, allMode);
     }
 
-    @GetMapping("/genres/all")
+    @PostMapping("/genres/all")
     public List<Movie> getMoviesByAllGenres(@RequestBody Set<Genre> genres) throws UserServiceException {
         return movieService.getMoviesByAllGenres(genres);
     }
 
-    @GetMapping("/genres/some")
+    @PostMapping("/genres/some")
     public List<Movie> getMoviesBySomeGenres(@RequestBody Set<Genre> genres) throws UserServiceException {
         return movieService.getMoviesBySomeGenres(genres);
     }
