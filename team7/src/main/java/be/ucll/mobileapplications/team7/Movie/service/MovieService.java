@@ -99,6 +99,10 @@ public class MovieService {
     return selectedMovies;
   }
 
+
+
+
+
   public Movie addMovie(Movie movie) throws MovieServiceException {
     String title = movie.getTitle();
     Movie existingMovie = movieRepository.findMovieByTitle(title);
