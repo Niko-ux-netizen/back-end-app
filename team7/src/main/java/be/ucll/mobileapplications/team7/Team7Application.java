@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 
 @SpringBootApplication
+@ComponentScan("be.ucll.mobileapplications.team7")
 public class Team7Application {
 
     public static void main(String[] args) {
