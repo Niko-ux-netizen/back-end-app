@@ -28,17 +28,20 @@ public class Movie {
 
     public String tagline;
 
+    public String description;
+
+    public String producer;
+
     @NotEmpty
     public Set<Genre> genres;
 
     public Date releaseDate;
 
     public Set<Language> languages;
-    
-    public Double averageImdbRating; 
+
+    public Double averageImdbRating;
 
     public Set<StreamingPlatform> streamingPlatforms;
-    
 
     @ManyToMany(mappedBy = "history")
     @JsonBackReference("user-history")
@@ -55,7 +58,6 @@ public class Movie {
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("movie-reviews")
     private List<Review> reviews;
-    
 
     @ManyToMany(mappedBy = "selectedMovies")
     @JsonBackReference("party-selected")
@@ -65,12 +67,16 @@ public class Movie {
     @JsonBackReference("party-suggested")
     private Set<Party> suggestedInParty = new HashSet<>();
 
-    public Movie(String title, Set<Genre> genres, Date releaseDate, Set<Language> languages, Set<StreamingPlatform> streamingPlatforms, String tagline, Double averageImdbRating) {
+    public Movie(String title, Set<Genre> genres, Date releaseDate, Set<Language> languages,
+            Set<StreamingPlatform> streamingPlatforms, String tagline, String producer, String description,
+            Double averageImdbRating) {
         this.title = title;
         this.genres = genres;
         this.releaseDate = releaseDate;
         this.languages = languages;
         this.tagline = tagline;
+        this.producer = producer;
+        this.description = description;
         this.averageImdbRating = averageImdbRating;
         this.streamingPlatforms = streamingPlatforms;
 
@@ -81,7 +87,6 @@ public class Movie {
 
     public Movie() {
     }
-
 
     public Set<StreamingPlatform> getStreamingPlatforms() {
         return this.streamingPlatforms;
@@ -135,6 +140,22 @@ public class Movie {
         this.tagline = tagline;
     }
 
+    public void setDescripion(String description) {
+        this.description = description;
+    }
+
+    public void setProducer(String producer) {
+        this.producer = producer;
+    }
+
+    public String getProducer() {
+        return this.producer;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
     public Double getAverageImdbRating() {
         return this.averageImdbRating;
     }
@@ -165,12 +186,15 @@ public class Movie {
     public void addDeniedByUser(User user) {
         this.getDeniedBy().add(user);
     }
+
     public void setWatchedBy(Set<User> watchedBy) {
         this.watchedBy = watchedBy;
     }
+
     public void setToBeWatchedBy(Set<User> toBeWatchedBy) {
         this.toBeWatchedBy = toBeWatchedBy;
     }
+
     public void setDeniedBy(Set<User> deniedBy) {
         this.deniedBy = deniedBy;
     }
@@ -182,7 +206,6 @@ public class Movie {
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
     }
-
 
     public Set<User> getWatchedBy() {
         if (watchedBy == null) {
