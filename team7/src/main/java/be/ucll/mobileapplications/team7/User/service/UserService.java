@@ -25,6 +25,14 @@ public class UserService {
     return userRepository.findAll();
   }
 
+  public User getUserByEmail() {
+    User existingUser = userRepository.findUserByEmail(email);
+    if (existingUser == null) {
+      throw new UserServiceException("email", "User with given email doesn't exists");
+    }
+    return existingUser;
+  }
+
   public User addUser(User user) throws UserServiceException {
     String email = user.getEmail();
     User existingUser = userRepository.findUserByEmail(email);
@@ -33,6 +41,7 @@ public class UserService {
     }
     return userRepository.save(user);
   }
+
 
   public User addGenresToUser(String email, Set<Genre> genres) throws UserServiceException {
     User existingUser = userRepository.findUserByEmail(email);

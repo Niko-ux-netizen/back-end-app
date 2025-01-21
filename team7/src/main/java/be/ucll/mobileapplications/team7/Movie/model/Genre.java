@@ -22,3 +22,13 @@ public enum Genre {
   WAR,
   WESTERN;
 }
+
+@JsonValue
+public String getGenreName() {
+  return this.name();
+}
+
+@JsonCreator
+public static Genre fromString(String value) {
+  return Genre.valueOf(value.toUpperCase());
+}

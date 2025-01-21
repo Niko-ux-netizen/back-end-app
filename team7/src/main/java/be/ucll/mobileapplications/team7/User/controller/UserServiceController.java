@@ -38,10 +38,16 @@ public class UserServiceController {
         return userService.getAllUsers();
     }
 
+    @GetMapping()
+    public User getUserByEmail(@RequestParam String email) {
+        return userService.getUserByEmail(email);
+    }
+
     @PostMapping()
     public User addUser(@RequestBody @Valid User user) throws UserServiceException {
         return userService.addUser(user);
     }
+
 
     @PostMapping("/history")
     public User addMovieToHistory(@RequestParam String email, @RequestParam String title) throws UserServiceException {
