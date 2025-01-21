@@ -23,7 +23,7 @@ public class Team7Application {
     public static void main(String[] args) {
         SpringApplication.run(Team7Application.class, args);
     }
-
+ 
     @Bean
     CommandLineRunner seedDatabase(UserRepository userRepository, MovieRepository movieRepository) {
         return args -> {
