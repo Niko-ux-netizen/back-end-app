@@ -4,6 +4,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import be.ucll.mobileapplications.team7.Movie.model.Genre;
 import be.ucll.mobileapplications.team7.Movie.model.Language;
 import be.ucll.mobileapplications.team7.Movie.model.Movie;
@@ -25,6 +26,7 @@ public class Team7Application {
         SpringApplication.run(Team7Application.class, args);
     }
  
+    @SuppressWarnings("deprecation")
     @Bean
     CommandLineRunner seedDatabase(UserRepository userRepository, MovieRepository movieRepository) {
         return args -> {
@@ -195,8 +197,48 @@ public class Team7Application {
                             "The celebration of a lifetime.",
                             "Lee Unkrich",
                             "A young boy travels to the Land of the Dead to uncover his family's history.",
-                            8.4));
+                            8.4),
 
+                    new Movie("Inglourious Basterds", 
+                        new HashSet<>(Arrays.asList(Genre.ACTION, Genre.DRAMA, Genre.WAR)),
+                        new Date(2009-1900, 7, 21), 
+                        new HashSet<>(Arrays.asList(Language.ENGLISH, Language.DEUTSCH, Language.FRANÇAIS)),
+                        new HashSet<>(Arrays.asList(StreamingPlatform.PRIME_VIDEO, StreamingPlatform.NETFLIX)),
+                        "Quentin Tarantino", 
+                        "Once upon a time in Nazi-occupied France.", 
+                        "A revenge-fueled story set in World War II with a group of Jewish-American soldiers hunting down Nazis.", 
+                        8.3),
+                    
+                    new Movie("The Revenant", new HashSet<>(Arrays.asList(Genre.ADVENTURE, Genre.DRAMA, Genre.THRILLER)),
+                        new Date(2015-1900, 11, 25), new HashSet<>(Arrays.asList(Language.ENGLISH, Language.FRANÇAIS, Language.NEDERLANDS)),
+                        new HashSet<>(Arrays.asList(StreamingPlatform.HBO_MAX, StreamingPlatform.PRIME_VIDEO)),
+                        "Alejandro González Iñárritu", "Revenge is in his nature.", "A frontiersman fights for survival after being mauled by a bear and left for dead by members of his hunting team.", 8.0),
+                    
+                    new Movie("Mad Max: Fury Road", new HashSet<>(Arrays.asList(Genre.ACTION, Genre.ADVENTURE, Genre.SCIENCE_FICTION)),
+                        new Date(2015-1900, 4, 15), new HashSet<>(Arrays.asList(Language.ENGLISH, Language.FRANÇAIS, Language.DEUTSCH)),
+                        new HashSet<>(Arrays.asList(StreamingPlatform.NETFLIX, StreamingPlatform.HULU)),
+                        "George Miller", "What a lovely day.", "In a post-apocalyptic wasteland, Max teams up with a runaway warrior to escape a tyrannical warlord and his army.", 8.1),
+                    
+                    new Movie("Django Unchained", new HashSet<>(Arrays.asList(Genre.DRAMA, Genre.WESTERN)),
+                        new Date(2012-1900, 11, 25), new HashSet<>(Arrays.asList(Language.ENGLISH, Language.DEUTSCH, Language.FRANÇAIS)),
+                        new HashSet<>(Arrays.asList(StreamingPlatform.HBO_MAX, StreamingPlatform.PRIME_VIDEO)),
+                        "Quentin Tarantino", "Life, liberty and the pursuit of vengeance.", "A freed slave sets out to rescue his wife from a brutal plantation owner, with the help of a German bounty hunter.", 8.4),
+                    
+                    new Movie("Interstellar", new HashSet<>(Arrays.asList(Genre.ADVENTURE, Genre.DRAMA, Genre.SCIENCE_FICTION)),
+                        new Date(2014-1900, 10, 26), new HashSet<>(Arrays.asList(Language.ENGLISH, Language.FRANÇAIS, Language.DEUTSCH)),
+                        new HashSet<>(Arrays.asList(StreamingPlatform.PRIME_VIDEO, StreamingPlatform.NETFLIX)),
+                        "Christopher Nolan", "Mankind was born on Earth. It was never meant to die here.", "A group of explorers travel through a wormhole in space to ensure humanity's survival as Earth faces an ecological collapse.", 8.6),
+                    
+                    new Movie("The Social Network", new HashSet<>(Arrays.asList(Genre.BIOGRAPHY, Genre.DRAMA)),
+                        new Date(2010-1900, 9, 1), new HashSet<>(Arrays.asList(Language.ENGLISH, Language.FRANÇAIS, Language.NEDERLANDS)),
+                        new HashSet<>(Arrays.asList(StreamingPlatform.NETFLIX, StreamingPlatform.HULU)),
+                        "David Fincher", "You don't get to 500 million friends without making a few enemies.", "The story of how Mark Zuckerberg created Facebook, and the legal battles that followed its success.", 7.7),
+                    
+                    new Movie("The Wolf of Wall Street", new HashSet<>(Arrays.asList(Genre.BIOGRAPHY, Genre.COMEDY, Genre.CRIME)),
+                        new Date(2013-1900, 11, 25), new HashSet<>(Arrays.asList(Language.ENGLISH, Language.FRANÇAIS, Language.DEUTSCH)),
+                        new HashSet<>(Arrays.asList(StreamingPlatform.PRIME_VIDEO, StreamingPlatform.NETFLIX)),
+                        "Martin Scorsese", "The story of a man who had everything and lost it all.", "The rise and fall of Jordan Belfort, a stockbroker who built a corrupt empire of wealth and excess.", 8.2));
+                        
             movieRepository.saveAll(movies);
         };
     }

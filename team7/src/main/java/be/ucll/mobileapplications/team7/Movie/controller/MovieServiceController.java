@@ -45,11 +45,8 @@ public class MovieServiceController {
 
     @PostMapping("/genres/all")
     public List<Movie> getMoviesByAllGenres(@RequestBody Set<Genre> genres) throws UserServiceException {
-        print(genres);
         return movieService.getMoviesByAllGenres(genres);
     }
-
-
 
     @PostMapping("/genres/some")
     public List<Movie> getMoviesBySomeGenres(@RequestBody Set<Genre> genres) throws UserServiceException {
