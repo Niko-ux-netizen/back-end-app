@@ -1,6 +1,7 @@
 package be.ucll.mobileapplications.team7.Movie.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,8 +26,22 @@ public class Movie {
     @NotBlank(message = "Title is required")
     public String title;
 
+    public String tagline;
+
+    public String description;
+
+    public String producer;
+
     @NotEmpty
     public Set<Genre> genres;
+
+    public Date releaseDate;
+
+    public Set<Language> languages;
+
+    public Double averageImdbRating;
+
+    public Set<StreamingPlatform> streamingPlatforms;
 
     @ManyToMany(mappedBy = "history")
     @JsonBackReference("user-history")
@@ -43,25 +58,121 @@ public class Movie {
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("movie-reviews")
     private List<Review> reviews;
-    
 
     @ManyToMany(mappedBy = "selectedMovies")
+    @JsonBackReference("party-selected")
     private Set<Party> selectedInParty = new HashSet<>();
 
     @ManyToMany(mappedBy = "suggestedMovies")
+    @JsonBackReference("party-suggested")
     private Set<Party> suggestedInParty = new HashSet<>();
 
-    public Movie(String title, Set<Genre> genres) {
+    public Movie(String title, Set<Genre> genres, Date releaseDate, Set<Language> languages,
+            Set<StreamingPlatform> streamingPlatforms, String tagline, String producer, String description,
+            Double averageImdbRating) {
         this.title = title;
         this.genres = genres;
+        this.releaseDate = releaseDate;
+        this.languages = languages;
+        this.tagline = tagline;
+        this.producer = producer;
+        this.description = description;
+        this.averageImdbRating = averageImdbRating;
+        this.streamingPlatforms = streamingPlatforms;
+
         this.watchedBy = new HashSet<>();
         this.toBeWatchedBy = new HashSet<>();
-        this.selectedInParty = new HashSet<>();
-        this.suggestedInParty = new HashSet<>();
         this.reviews = new ArrayList<>();
     }
 
     public Movie() {
+    }
+
+    public Set<StreamingPlatform> getStreamingPlatforms() {
+        return this.streamingPlatforms;
+    }
+
+    public void setStreamingPlatforms(Set<StreamingPlatform> streamingPlatforms) {
+        this.streamingPlatforms = streamingPlatforms;
+    }
+
+    public Set<Party> getSelectedInParty() {
+        return this.selectedInParty;
+    }
+
+    public void setSelectedInParty(Set<Party> selectedInParty) {
+        this.selectedInParty = selectedInParty;
+    }
+
+    public Set<Party> getSuggestedInParty() {
+        return this.suggestedInParty;
+    }
+
+    public void setSuggestedInParty(Set<Party> suggestedInParty) {
+        this.suggestedInParty = suggestedInParty;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Date getReleaseDate() {
+        return this.releaseDate;
+    }
+
+    public void setReleaseDate(Date releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+    public Set<Language> getLanguages() {
+        return this.languages;
+    }
+
+    public void setLanguages(Set<Language> spokenLanguages) {
+        this.languages = spokenLanguages;
+    }
+
+    public String getTagline() {
+        return this.tagline;
+    }
+
+    public void setTagline(String tagline) {
+        this.tagline = tagline;
+    }
+
+    public void setDescripion(String description) {
+        this.description = description;
+    }
+
+    public void setProducer(String producer) {
+        this.producer = producer;
+    }
+
+    public String getProducer() {
+        return this.producer;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public Double getAverageImdbRating() {
+        return this.averageImdbRating;
+    }
+
+    public void setAverageImdbRating(Double averageImdbRating) {
+        this.averageImdbRating = averageImdbRating;
+    }
+
+    public Double getAverageRating() {
+        Double totalRating = 0.0;
+        Integer amountRated = this.getReviews().size();
+
+        for (Review review : this.getReviews()) {
+            totalRating += review.getRating();
+        }
+
+        return totalRating / amountRated;
     }
 
     public Set<User> getDeniedBy() {
@@ -75,12 +186,15 @@ public class Movie {
     public void addDeniedByUser(User user) {
         this.getDeniedBy().add(user);
     }
+
     public void setWatchedBy(Set<User> watchedBy) {
         this.watchedBy = watchedBy;
     }
+
     public void setToBeWatchedBy(Set<User> toBeWatchedBy) {
         this.toBeWatchedBy = toBeWatchedBy;
     }
+
     public void setDeniedBy(Set<User> deniedBy) {
         this.deniedBy = deniedBy;
     }
@@ -92,7 +206,6 @@ public class Movie {
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
     }
-
 
     public Set<User> getWatchedBy() {
         if (watchedBy == null) {
@@ -124,14 +237,6 @@ public class Movie {
 
     public Set<Genre> getGenres() {
         return this.genres;
-    }
-
-    public Set<Party> getSelectedInParty() {
-        return this.selectedInParty;
-    }
-
-    public Set<Party> getSuggestedInParty() {
-        return this.suggestedInParty;
     }
 
     public void setTitle(String title) {

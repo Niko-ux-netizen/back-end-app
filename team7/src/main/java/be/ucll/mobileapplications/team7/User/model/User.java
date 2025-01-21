@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import be.ucll.mobileapplications.team7.Movie.model.Genre;
 import be.ucll.mobileapplications.team7.Movie.model.Movie;
@@ -52,16 +54,16 @@ public class User {
 
   public Set<Genre> favoriteGenres = new HashSet<>();
 
-  @OneToMany(mappedBy = "partyCreator")
-  @JsonManagedReference
-  private Set<Party> parties = new HashSet<>();
-
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonManagedReference("user-reviews")
   private List<Review> reviews;
 
-  @ManyToMany
-  @JoinTable(name = "user_party", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "party_id"))
+  @OneToMany(mappedBy = "partyCreator")
+  @JsonIgnore
+  private Set<Party> parties = new HashSet<>();
+
+  @ManyToMany(mappedBy = "partyMembers")
+  @JsonBackReference("party-members")
   private Set<Party> joinedParties = new HashSet<>();
 
   public User(String username, String email, String password, LocalDate dateOfBirth) throws UserServiceException {

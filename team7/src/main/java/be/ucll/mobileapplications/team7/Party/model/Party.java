@@ -4,14 +4,19 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.Set;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
+import java.util.stream.Collectors;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import be.ucll.mobileapplications.team7.Movie.model.Movie;
-// import be.ucll.mobileapplications.team7.Movie.model.Movie;
 import be.ucll.mobileapplications.team7.User.model.User;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -31,34 +36,126 @@ public class Party {
 
     @ManyToOne
     @JoinColumn(name = "user_email")
-    @JsonBackReference
     private User partyCreator;
 
-    @ManyToMany(mappedBy = "joinedParties")
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "joined_users", 
+        joinColumns = @JoinColumn(name = "party_id"), 
+        inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     private Set<User> partyMembers;
-
-    @ManyToMany
-    @JoinTable(name = "party_suggested_movies", joinColumns = @JoinColumn(name = "party_id"), inverseJoinColumns = @JoinColumn(name = "movie_title"))
-    private Set<Movie> suggestedMovies;
-
-    @ManyToMany
-    @JoinTable(name = "party_selected_movies", joinColumns = @JoinColumn(name = "party_id"), inverseJoinColumns = @JoinColumn(name = "movie_title"))
-    private Set<Movie> selectedMovies;
 
     private LocalDate creationDate;
 
     private Status status;
 
-    public Party(User partyCreator) {
+    private String partyCode;
+
+    @Embedded
+    private PartyOptions partyOptions;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "suggested_movies", 
+        joinColumns = @JoinColumn(name = "party_id"), 
+        inverseJoinColumns = @JoinColumn(name = "movie_id"))
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    private Set<Movie> suggestedMovies;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "selected_movies", 
+        joinColumns = @JoinColumn(name = "party_id"), 
+        inverseJoinColumns = @JoinColumn(name = "movie_id"))
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    private Set<Movie> selectedMovies;
+    
+    @ElementCollection
+    @CollectionTable(name = "party_votes", joinColumns = @JoinColumn(name = "party_id"))
+    private List<Vote> votes = new ArrayList<>();
+
+    public Party(User partyCreator, PartyOptions partyOptions) {
         this.partyCreator = partyCreator;
         this.partyMembers = new HashSet<>();
-        this.suggestedMovies = new HashSet<>();
-        this.selectedMovies = new HashSet<>();
         this.creationDate = LocalDate.now();
-        this.status = Status.OPEN;
+        this.status = Status.CAN_BE_JOINED;
+        this.partyCode = generatePartyCode();
+        this.partyOptions = partyOptions;
     }
 
     public Party() {
+    }
+
+    public void generateSelectedMovies() {
+        if (this.votes == null || this.votes.isEmpty()) {
+            throw new IllegalStateException("No votes available to generate selected movies.");
+        }
+    
+        Map<Long, Long> voteCounts = this.votes.stream()
+            .filter(Vote::getWantToSeeTheMovie) 
+            .collect(Collectors.groupingBy(Vote::getMovieId, Collectors.counting()));
+    
+        List<Long> topMovieIds = voteCounts.entrySet().stream()
+            .sorted((entry1, entry2) -> Long.compare(entry2.getValue(), entry1.getValue())) 
+            .limit(2)
+            .map(Map.Entry::getKey)
+            .toList();
+    
+        Set<Movie> topMovies = this.suggestedMovies.stream()
+            .filter(movie -> topMovieIds.contains(movie.getId()))
+            .collect(Collectors.toSet());
+    
+        this.setSelectedMovies(topMovies);
+    }
+
+    public List<Vote> getVotes() {
+        if (this.votes == null) {
+            this.votes = new ArrayList<Vote>();
+        }
+        return this.votes;
+    }
+
+    public void setVotes(List<Vote> votes) {
+        this.votes = votes;
+    }
+
+    public Set<Movie> getSuggestedMovies() {
+        return this.suggestedMovies;
+    }
+
+    public void setSuggestedMovies(Set<Movie> suggestedMovies) {
+        this.suggestedMovies = suggestedMovies;
+    }
+
+    public Set<Movie> getSelectedMovies() {
+        return this.selectedMovies;
+    }
+
+    public void setSelectedMovies(Set<Movie> selectedMovies) {
+        this.selectedMovies = selectedMovies;
+    }
+
+    public PartyOptions getPartyOptions() {
+        return this.partyOptions;
+    }
+
+    public void setPartyOptions(PartyOptions partyOptions) {
+        this.partyOptions = partyOptions;
+    }
+
+    private String generatePartyCode() {
+        int leftLimit = 65; // letter 'a'
+        int rightLimit = 90; // letter 'z'
+        int targetStringLength = 4;
+        Random random = new Random();
+
+        String generatedString = random.ints(leftLimit, rightLimit + 1)
+        .limit(targetStringLength)
+        .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+        .toString();
+
+        return generatedString;
     }
 
     public Long getId() {
@@ -67,6 +164,15 @@ public class Party {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+
+    public String getPartyCode() {
+        return this.partyCode;
+    }
+
+    public void setPartyCode(String partyCode) {
+        this.partyCode = partyCode;
     }
 
     public User getPartyCreator() {
@@ -83,22 +189,6 @@ public class Party {
 
     public void setPartyMembers(Set<User> partyMembers) {
         this.partyMembers = partyMembers;
-    }
-
-    public Set<Movie> getSuggestedMovies() {
-        return suggestedMovies;
-    }
-
-    public void setSuggestedMovies(Set<Movie> suggestedMovies) {
-        this.suggestedMovies = suggestedMovies;
-    }
-
-    public Set<Movie> getSelectedMovies() {
-        return selectedMovies;
-    }
-
-    public void setSelectedMovies(Set<Movie> selectedMovies) {
-        this.selectedMovies = selectedMovies;
     }
 
     public LocalDate getCreationDate() {
@@ -122,17 +212,15 @@ public class Party {
         return this.partyMembers;
     }
 
-    public Status setStatusStarted() {
-        return this.status = Status.STARTED;
+    public Status setStatusVoting() {
+        return this.status = Status.VOTING;
     }
 
-    public Set<Movie> addSuggestedMovie(Movie movie) {
-        this.suggestedMovies.add(movie);
-        return this.suggestedMovies;
+    public Status setStatusCanBeJoined() {
+        return this.status = Status.CAN_BE_JOINED;
     }
 
-    public Set<Movie> addSelectedMovie(Movie movie) {
-        this.selectedMovies.add(movie);
-        return this.selectedMovies;
+    public Status setStatusClosed() {
+        return this.status = Status.CLOSED;
     }
 }
